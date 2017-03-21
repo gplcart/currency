@@ -111,12 +111,13 @@ class Currency extends Model
 
         $list = $this->currency->getList();
         $base = $this->currency->getDefault();
+        $results = $this->request($this->buildQuery($codes));
 
         $updated = array();
-        foreach ($this->request($this->buildQuery($codes)) as $result) {
+        foreach ($results as $result) {
 
-            $code = substr($result['id'], strlen($base));
-            if ($code == $base || empty($list[$code]) || empty($result['Rate'])) {
+            $code = preg_replace("/$base$/", '', $result['id']);
+            if ($code == $base || empty($list[$code]) || empty($result['Rate']) || $result['Rate'] == 0) {
                 continue;
             }
 
@@ -151,7 +152,7 @@ class Currency extends Model
         if (!empty($this->settings['correction'])) {
             $rate *= (1 + (float) $this->settings['correction'] / 100);
         }
-        return round($rate, $currency['decimals']);
+        return $rate;
     }
 
     /**
@@ -222,7 +223,7 @@ class Currency extends Model
         $base = $this->currency->getDefault();
 
         array_walk($codes, function(&$code) use($base) {
-            $code = "$base$code";
+            $code = "$code$base";
         });
 
         return array(
