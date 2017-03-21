@@ -79,7 +79,7 @@ class Settings extends BackendController
         $correction = $this->getSubmitted('correction');
         $derivation = $this->getSubmitted('derivation');
 
-        if (!filter_var($interval, FILTER_VALIDATE_INT)) {
+        if (filter_var($interval, FILTER_VALIDATE_INT) === false) {
             $this->setError('interval', $this->text('Interval must be integer value'));
         }
 
