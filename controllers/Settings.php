@@ -94,7 +94,7 @@ class Settings extends BackendController
             $this->setError('derivation', $this->text('Derivation must contain exactly 4 positive numbers separated by comma'));
         }
 
-        if ($this->hasErrors('settings')) {
+        if ($this->hasErrors()) {
             return false;
         }
 
