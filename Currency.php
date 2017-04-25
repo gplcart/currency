@@ -26,30 +26,6 @@ class Currency extends Module
     }
 
     /**
-     * Module info
-     * @return array
-     */
-    public function info()
-    {
-        return array(
-            'name' => 'Currency',
-            'version' => '1.0.0-dev',
-            'description' => 'Allows to update rates of store currencies using Yahoo Finance feed',
-            'author' => 'Iurii Makukh <gplcart.software@gmail.com>',
-            'core' => '1.x',
-            'license' => 'GNU General Public License 3.0',
-            'configure' => 'admin/module/settings/currency',
-            'settings' => array(
-                'status' => true,
-                'interval' => 86400,
-                'correction' => 0,
-                'currencies' => array(),
-                'derivation' => array(10, 1, 1, 10)
-            )
-        );
-    }
-
-    /**
      * Implements hook "route.list"
      * @param array $routes
      */
