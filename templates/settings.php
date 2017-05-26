@@ -22,7 +22,7 @@
       <div class="form-group required<?php echo $this->error('interval', ' has-error'); ?>">
         <label class="col-md-2 control-label"><?php echo $this->text('Interval'); ?></label>
         <div class="col-md-6">
-          <input name="settings[interval]" class="form-control" value="<?php echo $this->escape($settings['interval']); ?>">
+          <input name="settings[interval]" class="form-control" value="<?php echo $this->e($settings['interval']); ?>">
           <div class="help-block">
             <?php echo $this->error('interval'); ?>
             <div class="text-muted">
@@ -34,7 +34,7 @@
       <div class="form-group required<?php echo $this->error('derivation', ' has-error'); ?>">
         <label class="col-md-2 control-label"><?php echo $this->text('Derivation, %'); ?></label>
         <div class="col-md-6">
-          <input name="settings[derivation]" class="form-control" value="<?php echo is_array($settings['derivation']) ? $this->escape(implode(',', $settings['derivation'])) : $this->escape($settings['derivation']); ?>">
+          <input name="settings[derivation]" class="form-control" value="<?php echo is_array($settings['derivation']) ? $this->e(implode(',', $settings['derivation'])) : $this->e($settings['derivation']); ?>">
           <div class="help-block">
             <?php echo $this->error('derivation'); ?>
             <div class="text-muted">
@@ -46,7 +46,7 @@
       <div class="form-group required<?php echo $this->error('correction', ' has-error'); ?>">
         <label class="col-md-2 control-label"><?php echo $this->text('Correction, %'); ?></label>
         <div class="col-md-6">
-          <input name="settings[correction]" class="form-control" value="<?php echo $this->escape($settings['correction']); ?>">
+          <input name="settings[correction]" class="form-control" value="<?php echo $this->e($settings['correction']); ?>">
           <div class="help-block">
             <?php echo $this->error('correction'); ?>
             <div class="text-muted">
