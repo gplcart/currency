@@ -26,6 +26,16 @@ class Currency extends Module
     }
 
     /**
+     * Implements hook "module.install.before"
+     */
+    public function hookModuleInstallBefore(&$result)
+    {
+        if (!function_exists('curl_init')) {
+            $result = 'CURL library is not enabled';
+        }
+    }
+
+    /**
      * Implements hook "route.list"
      * @param array $routes
      */

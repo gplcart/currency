@@ -9,6 +9,10 @@ Features:
 - Configurable percent correction
 - Configurable allowed rate derivation
 
+Requirements:
+
+- CURL
+
 **Installation**
 
 1. Download and extract to `system/modules` manually or using composer `composer require gplcart/currency`. IMPORTANT: If you downloaded the module manually, be sure that the name of extracted module folder doesn't contain a branch/version suffix, e.g `-master`. Rename if needed.

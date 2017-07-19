@@ -80,7 +80,13 @@ class Currency extends Model
      */
     protected function request(array $query)
     {
-        $response = $this->curl->get(static::API_ENDPOINT, array('query' => $query));
+        try {
+            $response = $this->curl->get(static::API_ENDPOINT, array('query' => $query));
+            $data = json_decode($response, true);
+        } catch (\Exception $ex) {
+            return array();
+        }
+
         $error = $this->curl->getError();
 
         if (!empty($error)) {
@@ -88,12 +94,11 @@ class Currency extends Model
             return array();
         }
 
-        $data = json_decode($response, true);
-
         if (empty($data['query']['results']['rate'])) {
             $this->logger->log('module_currency', 'Wrong format of Yahoo Finance API response', 'warning');
             return array();
         }
+
         return $data['query']['results']['rate'];
     }
 
