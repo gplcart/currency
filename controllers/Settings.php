@@ -51,7 +51,9 @@ class Settings extends BackendController
     {
         $this->setTitleEditSettings();
         $this->setBreadcrumbEditSettings();
+
         $this->setData('settings', $this->config->module('currency'));
+
         $this->submitSettings();
         $this->outputEditSettings();
     }
@@ -75,22 +77,12 @@ class Settings extends BackendController
         $this->setSubmitted('settings');
         $this->setSubmittedBool('status');
 
-        $interval = $this->getSubmitted('interval');
-        $correction = $this->getSubmitted('correction');
-        $derivation = $this->getSubmitted('derivation');
+        $this->validateElement('interval', 'integer');
+        $this->validateElement('correction', 'numeric');
 
-        if (filter_var($interval, FILTER_VALIDATE_INT) === false) {
-            $this->setError('interval', $this->text('Interval must be integer value'));
-        }
+        $parts = array_map('trim', explode(',', $this->getSubmitted('derivation')));
 
-        if (!is_numeric($correction)) {
-            $this->setError('correction', $this->text('Correction must be either positive or negative numeric value'));
-        }
-
-        $parts = array_map('trim', explode(',', $derivation));
-        $numeric = array_filter($parts, 'is_numeric');
-
-        if (count($parts) != count($numeric) || count($parts) != 4) {
+        if (count($parts) != count(array_filter($parts, 'is_numeric')) || count($parts) != 4) {
             $this->setError('derivation', $this->text('Derivation must contain exactly 4 positive numbers separated by comma'));
         }
 
@@ -137,8 +129,7 @@ class Settings extends BackendController
      */
     protected function setTitleEditSettings()
     {
-        $vars = array('%name' => $this->text('Currency'));
-        $title = $this->text('Edit %name settings', $vars);
+        $title = $this->text('Edit %name settings', array('%name' => $this->text('Currency')));
         $this->setTitle($title);
     }
 
