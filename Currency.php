@@ -41,7 +41,6 @@ class Currency extends Module
      */
     public function hookRouteList(array &$routes)
     {
-        // Module settings page
         $routes['admin/module/settings/currency'] = array(
             'access' => 'module_edit',
             'handlers' => array(
@@ -58,10 +57,9 @@ class Currency extends Module
         $settings = $this->config->module('currency');
 
         if (!empty($settings['status'])) {
-            /* @var $model \gplcart\modules\currency\models\Currency */
-            $currency = $this->getInstance('gplcart\\modules\\currency\\models\\Currency');
-            $currency->setSettings($settings);
-            $currency->update();
+            /* @var $currency \gplcart\modules\currency\models\Currency */
+            $currency = $this->getModel('Currency', 'currency');
+            $currency->setSettings($settings)->update();
         }
     }
 

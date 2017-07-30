@@ -67,10 +67,12 @@ class Currency extends Model
     /**
      * Set module settings
      * @param array $settings
+     * @return $this
      */
     public function setSettings(array $settings)
     {
         $this->settings = $settings;
+        return $this;
     }
 
     /**
