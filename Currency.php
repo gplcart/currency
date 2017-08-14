@@ -31,7 +31,7 @@ class Currency extends Module
     public function hookModuleInstallBefore(&$result)
     {
         if (!function_exists('curl_init')) {
-            $result = 'CURL library is not enabled';
+            $result = $this->getLanguage()->text('CURL library is not enabled');
         }
     }
 
