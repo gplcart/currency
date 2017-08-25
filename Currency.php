@@ -59,7 +59,7 @@ class Currency extends Module
         if (!empty($settings['status'])) {
             /* @var $currency \gplcart\modules\currency\models\Currency */
             $currency = $this->getModel('Currency', 'currency');
-            $currency->setSettings($settings)->update();
+            $currency->update($settings);
         }
     }
 

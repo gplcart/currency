@@ -1,10 +1,10 @@
 <?php
 
 /**
- * @package Currency 
- * @author Iurii Makukh <gplcart.software@gmail.com> 
- * @copyright Copyright (c) 2017, Iurii Makukh <gplcart.software@gmail.com> 
- * @license https://www.gnu.org/licenses/gpl-3.0.en.html GNU General Public License 3.0 
+ * @package Currency
+ * @author Iurii Makukh <gplcart.software@gmail.com>
+ * @copyright Copyright (c) 2017, Iurii Makukh <gplcart.software@gmail.com>
+ * @license https://www.gnu.org/licenses/gpl-3.0.en.html GNU General Public License 3.0
  */
 
 namespace gplcart\modules\currency\controllers;
@@ -104,11 +104,16 @@ class Settings extends BackendController
 
         if ($this->getSubmitted('update')) {
             $results = $this->updateRateSettings();
-            if (!empty($results)) {
+            if (empty($results)) {
+                $severity = 'warning';
+                $message = $this->text('No currencies have been updated');
+            } else {
+                $severity = 'success';
                 $vars = array('@list' => implode(',', array_keys($results)));
                 $message = $this->text('Updated the following currencies: @list', $vars);
-                $this->setMessage($message, 'success', true);
             }
+
+            $this->setMessage($message, $severity, true);
         }
 
         $this->redirect('', $this->text('Settings have been updated'), 'success');
@@ -120,8 +125,7 @@ class Settings extends BackendController
      */
     protected function updateRateSettings()
     {
-        $this->currency_module_model->setSettings($this->getSubmitted());
-        return $this->currency_module_model->update();
+        return $this->currency_module_model->update($this->getSubmitted());
     }
 
     /**

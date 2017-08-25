@@ -65,17 +65,6 @@ class Currency extends Model
     }
 
     /**
-     * Set module settings
-     * @param array $settings
-     * @return $this
-     */
-    public function setSettings(array $settings)
-    {
-        $this->settings = $settings;
-        return $this;
-    }
-
-    /**
      * Performs GET request to Yahoo API
      * @param array $query
      * @return array
@@ -106,10 +95,13 @@ class Currency extends Model
 
     /**
      * Updated store currencies
+     * @param array $settings
      * @return array
      */
-    public function update()
+    public function update(array $settings)
     {
+        $this->settings = $settings;
+
         $codes = $this->getCandidates();
 
         if (empty($codes)) {
@@ -124,12 +116,13 @@ class Currency extends Model
         foreach ($results as $result) {
 
             $code = preg_replace("/$base$/", '', $result['id']);
+
             if ($code == $base || empty($list[$code]) || empty($result['Rate']) || $result['Rate'] == 0) {
                 continue;
             }
 
             if ($this->shouldUpdateRate($result['Rate'], $list[$code], $this->settings['derivation'])) {
-                $rate = $this->prepareRate($result['Rate'], $list[$code]);
+                $rate = $this->prepareRate($result['Rate']);
                 $updated[$code] = $rate;
                 $this->currency->update($code, array('conversion_rate' => $rate));
             }
@@ -151,14 +144,14 @@ class Currency extends Model
     /**
      * Prepares rate value before updating
      * @param float $rate
-     * @param array $currency
      * @return float
      */
-    protected function prepareRate($rate, array $currency)
+    protected function prepareRate($rate)
     {
         if (!empty($this->settings['correction'])) {
             $rate *= (1 + (float) $this->settings['correction'] / 100);
         }
+
         return $rate;
     }
 
@@ -182,9 +175,11 @@ class Currency extends Model
         if ($diff > 0) {
             return ($max_min <= $diffabs) && ($diffabs <= $max_max);
         }
+
         if ($diff < 0) {
             return ($min_min <= $diffabs) && ($diffabs <= $min_max);
         }
+
         return false;
     }
 
@@ -202,7 +197,7 @@ class Currency extends Model
 
         foreach ($list as $code => $currency) {
 
-            if (!empty($currency['default'])) {
+            if (!empty($currency['default']) || empty($currency['status'])) {
                 unset($list[$code]);
                 continue;
             }
@@ -230,13 +225,15 @@ class Currency extends Model
         $base = $this->currency->getDefault();
 
         array_walk($codes, function(&$code) use($base) {
-            $code = "$code$base";
+            $code = "\"$code$base\"";
         });
+
+        $list = implode(',', $codes);
 
         return array(
             'format' => 'json',
             'env' => 'store://datatables.org/alltableswithkeys',
-            'q' => 'SELECT * FROM yahoo.finance.xchange WHERE pair="' . implode(',', $codes) . '"'
+            'q' => "select * from yahoo.finance.xchange where pair in($list)"
         );
     }
 
