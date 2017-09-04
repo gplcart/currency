@@ -70,7 +70,7 @@ class Settings extends BackendController
 
     /**
      * Validates an array of submitted values
-     * @return array
+     * @return bool
      */
     protected function validateSettings()
     {

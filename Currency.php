@@ -27,6 +27,7 @@ class Currency extends Module
 
     /**
      * Implements hook "module.install.before"
+     * @param string|null $result
      */
     public function hookModuleInstallBefore(&$result)
     {

@@ -159,6 +159,7 @@ class Currency extends Model
      * Whether the currency should be updated
      * @param float $value
      * @param array $currency
+     * @param array $derivation
      * @return bool
      */
     protected function shouldUpdateRate($value, $currency, array $derivation)
