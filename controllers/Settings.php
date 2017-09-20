@@ -106,7 +106,7 @@ class Settings extends BackendController
             $results = $this->updateRateSettings();
             if (empty($results)) {
                 $severity = 'warning';
-                $message = $this->text('No currencies have been updated');
+                $message = $this->text('Currencies have not been updated');
             } else {
                 $severity = 'success';
                 $vars = array('@list' => implode(',', array_keys($results)));
@@ -125,6 +125,8 @@ class Settings extends BackendController
      */
     protected function updateRateSettings()
     {
+        $this->controlAccess('currency_edit');
+
         return $this->currency_module_model->update($this->getSubmitted());
     }
 

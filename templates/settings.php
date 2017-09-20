@@ -24,7 +24,7 @@
       <div class="help-block">
         <?php echo $this->error('interval'); ?>
         <div class="text-muted">
-          <?php echo $this->text('Minimal interval in seconds between updates. This value will be checked only during cron calls'); ?>
+          <?php echo $this->text('Minimal interval in seconds between updates. This value will be checked only during CRON executions'); ?>
         </div>
       </div>
     </div>
@@ -53,16 +53,18 @@
       </div>
     </div>
   </div>
+  <?php if($this->access('currency_edit')) { ?>
   <div class="form-group">
     <div class="col-md-6 col-md-offset-2">
       <div class="checkbox">
         <label>
-          <input name="settings[update]" type="checkbox" value="1"> <?php echo $this->text('Update on save'); ?>
+          <input name="settings[update]" type="checkbox" value="1"> <?php echo $this->text('Update upon saving'); ?>
           <div class="help-block"><?php echo $this->text('Update currency rates once the form is submitted. Derivation setting will be ignored!'); ?></div>
         </label>
       </div>
     </div>
   </div>
+  <?php } ?>
   <div class="form-group">
     <div class="col-md-4 col-md-offset-2">
       <div class="btn-toolbar">

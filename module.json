@@ -1,7 +1,7 @@
 {
     "name": "Currency",
     "version": "1.0.0-dev",
-    "description": "Allows to update rates of store currencies using Yahoo Finance feed",
+    "description": "Allows to automatically update currency rates using Yahoo Finance feed",
     "author": "Iurii Makukh <gplcart.software@gmail.com>",
     "core": "1.x",
     "license": "GNU General Public License 3.0",
