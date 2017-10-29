@@ -75,13 +75,7 @@ class Currency extends Model
             $response = $this->curl->get(static::API_ENDPOINT, array('query' => $query));
             $data = json_decode($response, true);
         } catch (\Exception $ex) {
-            return array();
-        }
-
-        $error = $this->curl->getError();
-
-        if (!empty($error)) {
-            $this->logger->log('module_currency', $error, 'warning');
+            $this->logger->log('module_currency', $ex->getMessage(), 'warning');
             return array();
         }
 
