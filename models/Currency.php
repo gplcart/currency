@@ -9,21 +9,20 @@
 
 namespace gplcart\modules\currency\models;
 
-use gplcart\core\Model,
-    gplcart\core\Logger;
+use gplcart\core\Logger;
 use gplcart\core\helpers\Curl as CurlHelper;
 use gplcart\core\models\Currency as CurrencyModel;
 
 /**
  * Methods to update currencies with data from Yahoo Finance feed
  */
-class Currency extends Model
+class Currency
 {
 
     /**
      * Yahoo API endpoint
      */
-    const API_ENDPOINT = 'https://query.yahooapis.com/v1/public/yql';
+    const URL = 'https://query.yahooapis.com/v1/public/yql';
 
     /**
      * Curl helper class instance
@@ -54,11 +53,8 @@ class Currency extends Model
      * @param CurrencyModel $currency
      * @param CurlHelper $curl
      */
-    public function __construct(Logger $logger, CurrencyModel $currency,
-            CurlHelper $curl)
+    public function __construct(Logger $logger, CurrencyModel $currency, CurlHelper $curl)
     {
-        parent::__construct();
-
         $this->curl = $curl;
         $this->logger = $logger;
         $this->currency = $currency;
@@ -72,7 +68,7 @@ class Currency extends Model
     protected function request(array $query)
     {
         try {
-            $response = $this->curl->get(static::API_ENDPOINT, array('query' => $query));
+            $response = $this->curl->get(static::URL, array('query' => $query));
             $data = json_decode($response, true);
         } catch (\Exception $ex) {
             $this->logger->log('module_currency', $ex->getMessage(), 'warning');

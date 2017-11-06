@@ -52,7 +52,7 @@ class Settings extends BackendController
         $this->setTitleEditSettings();
         $this->setBreadcrumbEditSettings();
 
-        $this->setData('settings', $this->config->module('currency'));
+        $this->setData('settings', $this->config->getFromModule('currency'));
 
         $this->submitSettings();
         $this->outputEditSettings();

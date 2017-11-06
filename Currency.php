@@ -9,7 +9,8 @@
 
 namespace gplcart\modules\currency;
 
-use gplcart\core\Module;
+use gplcart\core\Module,
+    gplcart\core\Config;
 
 /**
  * Main class for Currency module
@@ -18,11 +19,11 @@ class Currency extends Module
 {
 
     /**
-     * Constructor
+     * @param Config $config
      */
-    public function __construct()
+    public function __construct(Config $config)
     {
-        parent::__construct();
+        parent::__construct($config);
     }
 
     /**
@@ -55,7 +56,7 @@ class Currency extends Module
      */
     public function hookCron()
     {
-        $settings = $this->config->module('currency');
+        $settings = $this->config->getFromModule('currency');
 
         if (!empty($settings['status'])) {
             /* @var $currency \gplcart\modules\currency\models\Currency */
