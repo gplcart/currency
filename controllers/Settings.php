@@ -9,7 +9,6 @@
 
 namespace gplcart\modules\currency\controllers;
 
-use gplcart\core\models\Module as ModuleModel;
 use gplcart\core\controllers\backend\Controller as BackendController;
 use gplcart\modules\currency\models\Currency as CurrencyModuleCurrencyModel;
 
@@ -20,27 +19,18 @@ class Settings extends BackendController
 {
 
     /**
-     * Module model instance
-     * @var \gplcart\core\models\Module $module
-     */
-    protected $module;
-
-    /**
      * Currency model instance
      * @var \gplcart\modules\currency\models\Currency $currency_module_model
      */
     protected $currency_module_model;
 
     /**
-     * @param ModuleModel $module
      * @param CurrencyModuleCurrencyModel $currency
      */
-    public function __construct(ModuleModel $module,
-            CurrencyModuleCurrencyModel $currency)
+    public function __construct(CurrencyModuleCurrencyModel $currency)
     {
         parent::__construct();
 
-        $this->module = $module;
         $this->currency_module_model = $currency;
     }
 
@@ -52,7 +42,7 @@ class Settings extends BackendController
         $this->setTitleEditSettings();
         $this->setBreadcrumbEditSettings();
 
-        $this->setData('settings', $this->config->getFromModule('currency'));
+        $this->setData('settings', $this->module->getSettings('currency'));
 
         $this->submitSettings();
         $this->outputEditSettings();

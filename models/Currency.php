@@ -10,7 +10,7 @@
 namespace gplcart\modules\currency\models;
 
 use gplcart\core\Logger;
-use gplcart\core\helpers\Curl as CurlHelper;
+use gplcart\core\helpers\Request as RequestHelper;
 use gplcart\core\models\Currency as CurrencyModel;
 
 /**
@@ -25,12 +25,6 @@ class Currency
     const URL = 'https://query.yahooapis.com/v1/public/yql';
 
     /**
-     * Curl helper class instance
-     * @var \gplcart\core\helpers\Curl $curl
-     */
-    protected $curl;
-
-    /**
      * Currency model class instance
      * @var \gplcart\core\models\Currency $currency
      */
@@ -43,20 +37,20 @@ class Currency
     protected $logger;
 
     /**
-     * The module settings
-     * @var array
+     * Request class instance
+     * @var \gplcart\core\helpers\Request $request
      */
-    protected $settings = array();
+    protected $request;
 
     /**
      * @param Logger $logger
      * @param CurrencyModel $currency
-     * @param CurlHelper $curl
+     * @param RequestHelper $request
      */
-    public function __construct(Logger $logger, CurrencyModel $currency, CurlHelper $curl)
+    public function __construct(Logger $logger, CurrencyModel $currency, RequestHelper $request)
     {
-        $this->curl = $curl;
         $this->logger = $logger;
+        $this->request = $request;
         $this->currency = $currency;
     }
 
@@ -68,15 +62,15 @@ class Currency
     protected function request(array $query)
     {
         try {
-            $response = $this->curl->get(static::URL, array('query' => $query));
-            $data = json_decode($response, true);
+            $response = $this->request->send(static::URL . '?' . http_build_query($query));
+            $data = json_decode($response['data'], true);
         } catch (\Exception $ex) {
             $this->logger->log('module_currency', $ex->getMessage(), 'warning');
             return array();
         }
 
         if (empty($data['query']['results']['rate'])) {
-            $this->logger->log('module_currency', 'Wrong format of Yahoo Finance API response', 'warning');
+            $this->logger->log('module_currency', 'Failed to get currency rates from Yahoo Finance', 'warning');
             return array();
         }
 
@@ -90,9 +84,7 @@ class Currency
      */
     public function update(array $settings)
     {
-        $this->settings = $settings;
-
-        $codes = $this->getCandidates();
+        $codes = $this->getCandidates($settings);
 
         if (empty($codes)) {
             return array();
@@ -106,13 +98,12 @@ class Currency
         foreach ($results as $result) {
 
             $code = preg_replace("/$base$/", '', $result['id']);
-
             if ($code == $base || empty($list[$code]) || empty($result['Rate']) || $result['Rate'] == 0) {
                 continue;
             }
 
-            if ($this->shouldUpdateRate($result['Rate'], $list[$code], $this->settings['derivation'])) {
-                $rate = $this->prepareRate($result['Rate']);
+            if ($this->shouldUpdateRate($result['Rate'], $list[$code], $settings)) {
+                $rate = $this->prepareRate($result['Rate'], $settings);
                 $updated[$code] = $rate;
                 $this->currency->update($code, array('conversion_rate' => $rate));
             }
@@ -134,12 +125,13 @@ class Currency
     /**
      * Prepares rate value before updating
      * @param float $rate
+     * @param array $settings
      * @return float
      */
-    protected function prepareRate($rate)
+    protected function prepareRate($rate, array $settings)
     {
-        if (!empty($this->settings['correction'])) {
-            $rate *= (1 + (float) $this->settings['correction'] / 100);
+        if (!empty($settings['correction'])) {
+            $rate *= (1 + (float) $settings['correction'] / 100);
         }
 
         return $rate;
@@ -149,16 +141,16 @@ class Currency
      * Whether the currency should be updated
      * @param float $value
      * @param array $currency
-     * @param array $derivation
+     * @param array $settings
      * @return bool
      */
-    protected function shouldUpdateRate($value, $currency, array $derivation)
+    protected function shouldUpdateRate($value, $currency, array $settings)
     {
-        if (!empty($this->settings['update'])) {
+        if (!empty($settings['update'])) {
             return true;
         }
 
-        list($min_max, $min_min, $max_min, $max_max) = $derivation;
+        list($min_max, $min_min, $max_min, $max_max) = $settings['derivation'];
 
         $diff = (1 - ($currency['conversion_rate'] / $value)) * 100;
         $diffabs = abs($diff);
@@ -176,14 +168,15 @@ class Currency
 
     /**
      * Returns an array of currency codes to be updated
+     * @param array $settings
      * @return array
      */
-    public function getCandidates()
+    public function getCandidates(array $settings)
     {
         $list = $this->currency->getList();
 
-        if (!empty($this->settings['currencies'])) {
-            $list = array_intersect_key(array_flip($this->settings['currencies']), $list);
+        if (!empty($settings['currencies'])) {
+            $list = array_intersect_key(array_flip($settings['currencies']), $list);
         }
 
         foreach ($list as $code => $currency) {
@@ -193,12 +186,11 @@ class Currency
                 continue;
             }
 
-            if (!empty($this->settings['update'])) {
+            if (!empty($settings['update'])) {
                 continue; // Force updating
             }
 
-            if (!empty($this->settings['interval'])//
-                    && (GC_TIME - $currency['modified']) < (int) $this->settings['interval']) {
+            if (!empty($settings['interval']) && (GC_TIME - $currency['modified']) < (int) $settings['interval']) {
                 unset($list[$code]);
             }
         }

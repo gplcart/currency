@@ -10,31 +10,26 @@
 namespace gplcart\modules\currency;
 
 use gplcart\core\Module,
-    gplcart\core\Config;
+    gplcart\core\Container;
 
 /**
  * Main class for Currency module
  */
-class Currency extends Module
+class Currency
 {
 
     /**
-     * @param Config $config
+     * Model class instance
+     * @var \gplcart\core\Module $module
      */
-    public function __construct(Config $config)
-    {
-        parent::__construct($config);
-    }
+    protected $module;
 
     /**
-     * Implements hook "module.install.before"
-     * @param string|null $result
+     * @param Module $module
      */
-    public function hookModuleInstallBefore(&$result)
+    public function __construct(Module $module)
     {
-        if (!function_exists('curl_init')) {
-            $result = $this->getLanguage()->text('CURL library is not enabled');
-        }
+        $this->module = $module;
     }
 
     /**
@@ -56,13 +51,27 @@ class Currency extends Module
      */
     public function hookCron()
     {
-        $settings = $this->config->getFromModule('currency');
+        $this->updateCurrencyRates();
+    }
 
+    /**
+     * Update currency rates
+     */
+    protected function updateCurrencyRates()
+    {
+        $settings = $this->module->getSettings('currency');
         if (!empty($settings['status'])) {
-            /* @var $currency \gplcart\modules\currency\models\Currency */
-            $currency = $this->getModel('Currency', 'currency');
-            $currency->update($settings);
+            $this->getModel()->update($settings);
         }
+    }
+
+    /**
+     * Returns Currency model instance
+     * @return \gplcart\modules\currency\models\Currency
+     */
+    protected function getModel()
+    {
+        return Container::get('gplcart\\modules\\currency\\models\\Currency');
     }
 
 }
