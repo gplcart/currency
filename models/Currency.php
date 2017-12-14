@@ -10,8 +10,8 @@
 namespace gplcart\modules\currency\models;
 
 use gplcart\core\Logger;
-use gplcart\core\helpers\Request as RequestHelper;
 use gplcart\core\models\Currency as CurrencyModel;
+use gplcart\core\helpers\SocketClient as SocketHelper;
 
 /**
  * Methods to update currencies with data from Yahoo Finance feed
@@ -37,20 +37,20 @@ class Currency
     protected $logger;
 
     /**
-     * Request class instance
-     * @var \gplcart\core\helpers\Request $request
+     * Socket client class instance
+     * @var \gplcart\core\helpers\SocketClient $socket
      */
-    protected $request;
+    protected $socket;
 
     /**
      * @param Logger $logger
      * @param CurrencyModel $currency
-     * @param RequestHelper $request
+     * @param SocketHelper $socket
      */
-    public function __construct(Logger $logger, CurrencyModel $currency, RequestHelper $request)
+    public function __construct(Logger $logger, CurrencyModel $currency, SocketHelper $socket)
     {
         $this->logger = $logger;
-        $this->request = $request;
+        $this->socket = $socket;
         $this->currency = $currency;
     }
 
@@ -62,7 +62,7 @@ class Currency
     protected function request(array $query)
     {
         try {
-            $response = $this->request->send(static::URL . '?' . http_build_query($query));
+            $response = $this->socket->request(static::URL, array('query' => $query));
             $data = json_decode($response['data'], true);
         } catch (\Exception $ex) {
             $this->logger->log('module_currency', $ex->getMessage(), 'warning');
