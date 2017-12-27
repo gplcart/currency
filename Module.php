@@ -9,13 +9,13 @@
 
 namespace gplcart\modules\currency;
 
-use gplcart\core\Module,
-    gplcart\core\Container;
+use gplcart\core\Container,
+    gplcart\core\Module as CoreModule;
 
 /**
  * Main class for Currency module
  */
-class Currency
+class Module
 {
 
     /**
@@ -25,9 +25,9 @@ class Currency
     protected $module;
 
     /**
-     * @param Module $module
+     * @param CoreModule $module
      */
-    public function __construct(Module $module)
+    public function __construct(CoreModule $module)
     {
         $this->module = $module;
     }
