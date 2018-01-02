@@ -61,7 +61,7 @@ class Module
     {
         $settings = $this->module->getSettings('currency');
         if (!empty($settings['status'])) {
-            $this->getModel()->update($settings);
+            $this->getCurrencyModel()->update($settings);
         }
     }
 
@@ -69,7 +69,7 @@ class Module
      * Returns Currency model instance
      * @return \gplcart\modules\currency\models\Currency
      */
-    protected function getModel()
+    protected function getCurrencyModel()
     {
         return Container::get('gplcart\\modules\\currency\\models\\Currency');
     }
