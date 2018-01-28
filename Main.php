@@ -47,9 +47,9 @@ class Main
     }
 
     /**
-     * Implements hook "cron"
+     * Implements hook "cron.run.after"
      */
-    public function hookCron()
+    public function hookCronRunAfter()
     {
         $this->updateCurrencyRates();
     }
