@@ -11,7 +11,7 @@ namespace gplcart\modules\currency\models;
 
 use gplcart\core\Logger;
 use gplcart\core\models\Currency as CurrencyModel;
-use gplcart\core\helpers\SocketClient as SocketHelper;
+use gplcart\core\helpers\Socket as SocketHelper;
 
 /**
  * Methods to update currencies with data from Yahoo Finance feed
@@ -38,7 +38,7 @@ class Currency
 
     /**
      * Socket client class instance
-     * @var \gplcart\core\helpers\SocketClient $socket
+     * @var \gplcart\core\helpers\Socket $socket
      */
     protected $socket;
 
