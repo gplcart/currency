@@ -1,24 +1,29 @@
 {
-    "name": "gplcart/currency",
-    "type": "gplcart-module",
-    "description": "Allows to update rates for store currencies using Yahoo Finance feed",
-    "keywords": ["gplcart", "ecommerce", "shopping cart", "gplcart-module"],
-    "homepage": "https://github.com/gplcart/currency",
-    "license": "GPL-3.0",
-    "authors": [
-        {
-            "name": "Iurii Makukh",
-            "email": "gplcart.software@gmail.com",
-            "role": "lead"
-        }
-    ],
-    "support": {
-        "issues": "https://github.com/gplcart/currency/issues"
-    },
-    "require": {
-        "gplcart/composer-module-installer": "*",
-        "ext-curl": "*"
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+  "name": "gplcart/currency",
+  "type": "gplcart-module",
+  "description": "Allows to update rates for store currencies using Yahoo Finance feed",
+  "keywords": [
+    "gplcart",
+    "ecommerce",
+    "shopping cart",
+    "gplcart-module"
+  ],
+  "homepage": "https://github.com/gplcart/currency",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Iurii Makukh",
+      "email": "gplcart.software@gmail.com",
+      "role": "lead"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/gplcart/currency/issues"
+  },
+  "require": {
+    "gplcart/composer-module-installer": "*",
+    "ext-curl": "*"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }
