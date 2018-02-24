@@ -9,6 +9,7 @@
 
 namespace gplcart\modules\currency\models;
 
+use Exception;
 use gplcart\core\Logger;
 use gplcart\core\models\Currency as CurrencyModel;
 use gplcart\core\models\Http as HttpModel;
@@ -59,12 +60,12 @@ class Currency
      * @param array $query
      * @return array
      */
-    protected function request(array $query)
+    public function request(array $query)
     {
         try {
             $response = $this->http->request(static::URL, array('query' => $query));
             $data = json_decode($response['data'], true);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             $this->logger->log('module_currency', $ex->getMessage(), 'warning');
             return array();
         }

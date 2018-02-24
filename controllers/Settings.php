@@ -9,29 +9,29 @@
 
 namespace gplcart\modules\currency\controllers;
 
-use gplcart\core\controllers\backend\Controller as BackendController;
-use gplcart\modules\currency\models\Currency as CurrencyModuleCurrencyModel;
+use gplcart\core\controllers\backend\Controller;
+use gplcart\modules\currency\models\Currency;
 
 /**
  * Handles incoming requests and outputs data related to Currency module settings
  */
-class Settings extends BackendController
+class Settings extends Controller
 {
 
     /**
      * Currency model instance
-     * @var \gplcart\modules\currency\models\Currency $currency_module_model
+     * @var \gplcart\modules\currency\models\Currency $currency_model
      */
-    protected $currency_module_model;
+    protected $currency_model;
 
     /**
-     * @param CurrencyModuleCurrencyModel $currency
+     * @param Currency $currency
      */
-    public function __construct(CurrencyModuleCurrencyModel $currency)
+    public function __construct(Currency $currency)
     {
         parent::__construct();
 
-        $this->currency_module_model = $currency;
+        $this->currency_model = $currency;
     }
 
     /**
@@ -41,9 +41,7 @@ class Settings extends BackendController
     {
         $this->setTitleEditSettings();
         $this->setBreadcrumbEditSettings();
-
         $this->setData('settings', $this->module->getSettings('currency'));
-
         $this->submitSettings();
         $this->outputEditSettings();
     }
@@ -117,7 +115,7 @@ class Settings extends BackendController
     {
         $this->controlAccess('currency_edit');
 
-        return $this->currency_module_model->update($this->getSubmitted());
+        return $this->currency_model->update($this->getSubmitted());
     }
 
     /**
