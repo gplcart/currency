@@ -9,8 +9,8 @@
 
 namespace gplcart\modules\currency;
 
-use gplcart\core\Module,
-    gplcart\core\Container;
+use gplcart\core\Container;
+use gplcart\core\Module;
 
 /**
  * Main class for Currency module
@@ -71,7 +71,9 @@ class Main
      */
     protected function getCurrencyModel()
     {
-        return Container::get('gplcart\\modules\\currency\\models\\Currency');
+        /** @var \gplcart\modules\currency\models\Currency $instance */
+        $instance = Container::get('gplcart\\modules\\currency\\models\\Currency');
+        return $instance;
     }
 
 }
